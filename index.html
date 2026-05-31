@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yoruba–Deutsch Wörterbuch · Prototyp</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,500;1,400&family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.8.0/dist/tabler-icons.min.css">
+<style>
+/* ================================================
+   YORUBA–DEUTSCH WÖRTERBUCH — PROTOTYP
+   Interaktive Version für GitHub Pages
+
+   Inhalt bearbeiten: Scrollen Sie zu dem Abschnitt
+   mit dem Kommentar "WÖRTERBUCHINHALT BEGINNT HIER"
+   und ändern Sie den Text direkt im HTML.
+   ================================================ */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', system-ui, sans-serif;
+  background: #f5f4f0;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  color: #1a1a18;
+}
+
+.page-wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.page-title {
+  font-family: 'Noto Serif', serif;
+  font-size: 15px;
+  color: #5f5e5a;
+  margin-bottom: 1.25rem;
+  letter-spacing: .01em;
+}
+
+/* Search */
+.srch {
+  position: relative;
+  background: #042C53;
+  padding: 14px 18px;
+  border-radius: 12px 12px 0 0;
+}
+.srch input {
+  width: 100%;
+  padding: 10px 14px 10px 40px;
+  border-radius: 8px;
+  border: .5px solid rgba(255,255,255,.25);
+  background: rgba(255,255,255,.12);
+  color: #E6F1FB;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  outline: none;
+}
+.srch input::placeholder { color: #85B7EB; }
+.srch input:focus { background: rgba(255,255,255,.2); border-color: rgba(255,255,255,.5); }
+.srch .si { position: absolute; left: 30px; top: 50%; transform: translateY(-50%); font-size: 16px; color: #85B7EB; pointer-events: none; }
+
+/* Tabs */
+.tnav {
+  display: flex;
+  background: #042C53;
+  padding: 0 18px;
+  gap: 2px;
+  border-top: .5px solid rgba(255,255,255,.1);
+}
+.tb {
+  font-family: 'Noto Serif', serif;
+  font-size: 14px;
+  color: #85B7EB;
+  background: none;
+  border: none;
+  border-bottom: 2.5px solid transparent;
+  padding: 11px 16px 9px;
+  cursor: pointer;
+  transition: all .15s;
+}
+.tb:hover { color: #B5D4F4; }
+.tb.act { color: #E6F1FB; border-bottom-color: #4BA3E3; }
+
+/* Articles */
+.art {
+  display: none;
+  background: #fff;
+  border: .5px solid #d3d1c7;
+  border-top: 2.5px solid #185FA5;
+  border-radius: 0 0 12px 12px;
+}
+.art.show { display: block; }
+
+/* Header */
+.ahd { background: #042C53; padding: 20px 24px 16px; }
+.lem { font-family: 'Noto Serif', serif; font-size: 34px; font-weight: 500; color: #E6F1FB; line-height: 1; margin-bottom: 8px; }
+.meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.pos { font-family: 'Noto Serif', serif; font-style: italic; font-size: 14px; color: #85B7EB; }
+.bdg { font-size: 11px; background: rgba(255,255,255,.1); color: #B5D4F4; padding: 2px 9px; border-radius: 6px; }
+
+/* Body */
+.ab { padding: 22px 24px; }
+.gl { font-family: 'Noto Serif', serif; font-size: 16px; color: #1a1a18; margin-bottom: 14px; }
+
+/* Amber callout */
+.hw { display: flex; gap: 10px; background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0; padding: 11px 14px; margin-bottom: 18px; }
+.hw i { font-size: 15px; color: #854F0B; flex-shrink: 0; margin-top: 2px; }
+.hw p { font-size: 13px; color: #633806; line-height: 1.6; font-family: 'Noto Serif', serif; }
+
+/* Small amber (inside other boxes) */
+.hws { display: flex; gap: 9px; background: #FAEEDA; border-left: 3px solid #854F0B; border-radius: 0; padding: 9px 12px; margin-top: 9px; }
+.hws i { font-size: 13px; color: #854F0B; flex-shrink: 0; margin-top: 1px; }
+.hws p { font-size: 12.5px; color: #633806; line-height: 1.55; font-family: 'Noto Serif', serif; }
+
+/* Sense divider */
+.sdiv { padding-bottom: 20px; border-bottom: .5px solid #d3d1c7; margin-bottom: 20px; }
+
+/* Sense header */
+.shr { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.sn { width: 22px; height: 22px; border-radius: 50%; background: #185FA5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 2px; }
+.sn span { font-size: 11px; font-weight: 500; color: #E6F1FB; }
+.sl2 { font-family: 'Noto Serif', serif; font-size: 17px; color: #0C447C; margin-bottom: 2px; }
+.seq { font-family: 'Noto Serif', serif; font-size: 15px; color: #1a1a18; }
+
+/* Example blocks */
+.ex { background: #f1efe8; border-radius: 8px; padding: 10px 14px; margin-top: 8px; }
+.exi { margin-left: 32px; }
+.ey { font-family: 'Noto Serif', serif; font-style: italic; font-size: 14px; color: #1a1a18; line-height: 1.6; margin-bottom: 5px; }
+.ed { font-family: 'Noto Serif', serif; font-size: 14px; color: #5f5e5a; line-height: 1.6; padding-top: 5px; border-top: .5px solid #b4b2a9; }
+
+/* Sub-constructions */
+.subk { margin-top: 14px; padding-top: 12px; border-top: .5px solid #d3d1c7; }
+.subk-lb { font-size: 10.5px; font-weight: 500; color: #888780; margin-bottom: 11px; text-transform: uppercase; letter-spacing: .05em; }
+.sk { border-left: 2px solid #B5D4F4; padding-left: 13px; margin-bottom: 16px; }
+.sk:last-child { margin-bottom: 0; }
+.sk-l { font-family: 'Noto Serif', serif; font-size: 15px; color: #0C447C; margin-bottom: 2px; }
+.sk-e { font-family: 'Noto Serif', serif; font-size: 14px; color: #1a1a18; margin-bottom: 7px; }
+
+/* Simple wendungen */
+.wlbl { font-size: 10.5px; font-weight: 500; color: #888780; margin: 12px 0 7px 32px; text-transform: uppercase; letter-spacing: .05em; }
+.wend-s { margin-left: 32px; border: .5px solid #d3d1c7; border-radius: 8px; overflow: hidden; }
+.wi { display: flex; gap: 8px; align-items: baseline; padding: 7px 12px; border-bottom: .5px solid #d3d1c7; font-size: 14px; }
+.wi:last-child { border-bottom: none; }
+.wi-yo { font-family: 'Noto Serif', serif; font-style: italic; color: #0C447C; flex-shrink: 0; }
+.wi-sep { color: #888780; font-size: 12px; }
+.wi-de { font-family: 'Noto Serif', serif; color: #5f5e5a; }
+
+/* Sonderhinweis — blue box */
+.sond { background: #E6F1FB; border: .5px solid #B5D4F4; border-radius: 12px; padding: 16px 20px; margin-top: 22px; }
+.sond-top { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; flex-wrap: wrap; }
+.sond-bdg { font-size: 10px; font-weight: 500; background: #0C447C; color: #E6F1FB; padding: 3px 9px; border-radius: 6px; }
+.sond-l { font-family: 'Noto Serif', serif; font-size: 17px; color: #0C447C; }
+.sond-e { font-family: 'Noto Serif', serif; font-size: 15px; color: #0C447C; margin-bottom: 11px; }
+.sond-ex { background: rgba(255,255,255,.55); border-radius: 8px; padding: 10px 14px; }
+.sond-ey { font-family: 'Noto Serif', serif; font-style: italic; font-size: 14px; color: #0C447C; line-height: 1.6; margin-bottom: 5px; }
+.sond-ed { font-family: 'Noto Serif', serif; font-size: 14px; color: #185FA5; line-height: 1.6; padding-top: 5px; border-top: .5px solid #B5D4F4; }
+
+/* Kultureller Hinweis — teal box */
+.kult { background: #E1F5EE; border: .5px solid #1D9E75; border-radius: 8px; padding: 12px 15px; margin: 10px 0 0 32px; }
+.kult-top { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+.kult-top i { font-size: 14px; color: #0F6E56; }
+.kult-lbl { font-size: 11px; font-weight: 500; color: #085041; }
+.kult-txt { font-family: 'Noto Serif', serif; font-size: 13px; color: #085041; line-height: 1.65; }
+
+/* Collapsible Wortbildung */
+details { border: .5px solid #d3d1c7; border-radius: 8px; margin-bottom: 18px; }
+summary { padding: 10px 14px; cursor: pointer; list-style: none; display: flex; justify-content: space-between; align-items: center; font-size: 13px; font-weight: 500; color: #1a1a18; user-select: none; }
+summary::-webkit-details-marker { display: none; }
+.ci { font-size: 14px; color: #888780; display: inline-block; transition: transform .2s; }
+details[open] .ci { transform: rotate(180deg); }
+.wbd { padding: 10px 14px 14px; border-top: .5px solid #d3d1c7; }
+.wb-str { font-family: 'Noto Serif', serif; font-style: italic; font-size: 13px; color: #888780; margin-bottom: 10px; }
+.wb-li { display: flex; gap: 10px; padding: 6px 0; border-bottom: .5px solid #d3d1c7; }
+.wb-li:last-of-type { border-bottom: none; }
+.wb-p { font-family: 'Noto Serif', serif; font-style: italic; color: #0C447C; min-width: 90px; flex-shrink: 0; font-size: 14px; }
+.wb-d { color: #1a1a18; font-size: 13.5px; line-height: 1.5; }
+
+/* Siehe auch */
+.sa { margin-top: 18px; padding-top: 14px; border-top: .5px solid #d3d1c7; }
+.sa-lbl { font-size: 10.5px; font-weight: 500; color: #888780; margin-bottom: 9px; text-transform: uppercase; letter-spacing: .05em; }
+.sa-items { display: flex; gap: 8px; flex-wrap: wrap; }
+.sa-it { font-size: 13px; border: .5px solid #d3d1c7; border-radius: 8px; padding: 6px 12px; background: #f1efe8; }
+.sa-yo { font-family: 'Noto Serif', serif; font-style: italic; color: #0C447C; display: block; margin-bottom: 2px; }
+.sa-de { font-family: 'Noto Serif', serif; color: #888780; font-size: 12px; display: block; }
+
+/* Footer */
+.afoot { background: #f1efe8; border-top: .5px solid #d3d1c7; padding: 10px 24px; display: flex; justify-content: space-between; align-items: center; border-radius: 0 0 11px 11px; margin-top: 8px; }
+.afoot-l { font-size: 12px; color: #888780; }
+.afoot-r { font-size: 11px; font-weight: 500; color: #185FA5; }
+
+/* Search results */
+.res { display: none; background: #fff; border: .5px solid #d3d1c7; border-top: none; border-radius: 0 0 12px 12px; padding: 16px 20px; }
+.res.show { display: block; }
+.res-ct { font-size: 11px; font-weight: 500; color: #888780; margin-bottom: 10px; }
+.ri { border: .5px solid #d3d1c7; border-radius: 8px; padding: 10px 14px; margin-bottom: 8px; cursor: pointer; transition: background .1s; }
+.ri:hover { background: #f1efe8; }
+.ri:last-child { margin-bottom: 0; }
+.ri-l { font-family: 'Noto Serif', serif; font-style: italic; font-size: 15px; color: #0C447C; margin-bottom: 2px; }
+.ri-e { font-family: 'Noto Serif', serif; font-size: 13px; color: #1a1a18; margin-bottom: 3px; }
+.ri-tag { font-size: 11px; font-weight: 500; color: #185FA5; }
+.no-res { font-size: 14px; color: #888780; text-align: center; padding: 20px; font-family: 'Noto Serif', serif; font-style: italic; }
+
+@media (max-width: 500px) {
+  .lem { font-size: 26px; }
+  .ab { padding: 16px 16px; }
+  .ahd { padding: 16px 16px 12px; }
+}
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+<p class="page-title">Yoruba–Deutsch Wörterbuch · Prototyp (EURALEX 2026)</p>
+
+<div class="srch">
+  <i class="ti ti-search si" aria-hidden="true"></i>
+  <input type="text" id="q" placeholder="Suchen … z. B. àmúlò, Leben, Coach" oninput="doSearch()" autocomplete="off" spellcheck="false">
+</div>
+
+<div class="tnav">
+  <button class="tb act" onclick="goTab('se',this)">ṣe</button>
+  <button class="tb" onclick="goTab('aye',this)">ayé</button>
+  <button class="tb" onclick="goTab('ako',this)">akọ́nimọ̀ọ́gbá</button>
+</div>
+
+<!-- SUCHERGEBNISSE -->
+<div class="res" id="res">
+  <p class="res-ct" id="res-ct"></p>
+  <div id="res-list"></div>
+</div>
+
+<!-- ============================================================
+     WÖRTERBUCHINHALT BEGINNT HIER
+     So bearbeiten Sie einen Eintrag:
+     1. Öffnen Sie diese Datei in einem Texteditor (z. B. Notepad,
+        TextEdit, VS Code).
+     2. Suchen Sie nach dem Lemma, das Sie ändern möchten.
+     3. Ändern Sie den Text zwischen den HTML-Tags.
+        Beispiel: <p class="sk-e">anwenden, umsetzen</p>
+        → Ändern Sie nur den Text, nicht die Tags selbst.
+     4. Speichern Sie die Datei als UTF-8 (Standard in modernen
+        Editoren). Die Datei muss UTF-8-kodiert sein, damit die
+        Yoruba-Zeichen korrekt dargestellt werden.
+     ============================================================ -->
+
+<!-- ARTIKEL: ṣe =========================================== -->
+<div class="art show" id="art-se">
+  <div class="ahd">
+    <p class="lem">ṣe</p>
+    <div class="meta">
+      <span class="pos">Verb</span>
+      <span class="bdg">yo → de</span>
+    </div>
+  </div>
+  <div class="ab">
+
+    <!-- Grundbedeutung -->
+    <p class="gl">tun, machen, ausführen, durchführen</p>
+
+    <!-- Haupthinweis -->
+    <div class="hw">
+      <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+      <p><strong style="font-weight:500">Hinweis</strong> · Die deutsche Entsprechung hängt stark von der jeweiligen Konstruktion ab. <em>Ṣe</em> sollte daher nicht pauschal mit <em>machen</em> oder <em>tun</em> übersetzt werden.</p>
+    </div>
+
+    <!-- BEDEUTUNG 1 -->
+    <div class="shr">
+      <div class="sn"><span>1</span></div>
+      <div>
+        <p class="sl2">ṣe</p>
+        <p class="seq">tun, machen, ausführen, durchführen</p>
+      </div>
+    </div>
+    <div class="ex exi">
+      <p class="ey">Ó ṣe iṣẹ́ náà.</p>
+      <p class="ed">Er/Sie erledigte die Arbeit. / Er/Sie führte die Arbeit aus.</p>
+    </div>
+
+    <!-- KONSTRUKTIONEN -->
+    <div class="subk">
+      <p class="subk-lb">Konstruktionen</p>
+
+      <div class="sk">
+        <p class="sk-l">ṣe àmúlò</p>
+        <p class="sk-e">anwenden, umsetzen</p>
+        <div class="ex">
+          <p class="ey">Àjọ alákòóso náà ṣe àmúlò òfin náà.</p>
+          <p class="ed">Die Aufsichtsbehörde wandte das Gesetz an. / Die Aufsichtsbehörde setzte das Gesetz um.</p>
+        </div>
+      </div>
+
+      <div class="sk">
+        <p class="sk-l">ṣe àfihàn</p>
+        <p class="sk-e">zeigen, darstellen, zum Ausdruck bringen</p>
+        <div class="ex">
+          <p class="ey">Àwọn ète àgbàwí lè ṣe àfihàn ohun tí àwọn ènìyán nílò ní àwùjọ.</p>
+          <p class="ed">Ziele der Interessenvertretung können zeigen, was Menschen in der Gesellschaft brauchen.</p>
+        </div>
+      </div>
+
+      <div class="sk">
+        <p class="sk-l">ṣe ìdásílẹ̀</p>
+        <p class="sk-e">gründen, einrichten, ins Leben rufen</p>
+        <div class="ex">
+          <p class="ey">Èrò àwọn akọ̀ròyìn yìí ní ìbẹ̀rẹ̀pẹ̀pẹ̀ ni láti ṣe ìdásílẹ̀ ètò orí rédíò.</p>
+          <p class="ed">Der ursprüngliche Plan dieser Journalisten war, ein Radioprogramm einzurichten.</p>
+        </div>
+      </div>
+
+      <div class="sk">
+        <p class="sk-l">ṣe kókó</p>
+        <p class="sk-e">wichtig sein, zentral sein, eine wichtige Rolle spielen</p>
+        <div class="ex">
+          <p class="ey">Iṣẹ́ yín ṣe kókó.</p>
+          <p class="ed">Ihre Arbeit ist wichtig. / Ihre Arbeit spielt eine wichtige Rolle.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- SONDERHINWEIS: kì í ṣe -->
+    <div class="sond">
+      <div class="sond-top">
+        <span class="sond-bdg">Sonderhinweis</span>
+        <p class="sond-l">kì í ṣe</p>
+      </div>
+      <p class="sond-e">ist nicht, kein, es handelt sich nicht um</p>
+      <div class="hws" style="margin-bottom:11px">
+        <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+        <p><strong style="font-weight:500">Hinweis</strong> · <em>Kì í ṣe</em> ist eine negative Identifikationskonstruktion. Sie wird im Deutschen in der Regel nicht mit <em>machen</em> oder <em>tun</em> wiedergegeben.</p>
+      </div>
+      <div class="sond-ex">
+        <p class="sond-ey">Ó fojú jọ ìṣòro ni, kì í ṣe ìṣòro.</p>
+        <p class="sond-ed">Es sieht wie ein Problem aus, ist aber kein Problem.</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="afoot">
+    <span class="afoot-l">Yoruba–Deutsch Wörterbuch · Prototyp</span>
+    <span class="afoot-r">yo → de</span>
+  </div>
+</div>
+
+<!-- ARTIKEL: ayé ========================================== -->
+<div class="art" id="art-aye">
+  <div class="ahd">
+    <p class="lem">ayé</p>
+    <div class="meta">
+      <span class="pos">Substantiv</span>
+      <span class="bdg">yo → de</span>
+    </div>
+  </div>
+  <div class="ab">
+
+    <!-- BEDEUTUNG 1 -->
+    <div class="sdiv">
+      <div class="shr">
+        <div class="sn"><span>1</span></div>
+        <div><p class="sl2">ayé</p><p class="seq">Leben</p></div>
+      </div>
+      <div class="ex exi">
+        <p class="ey">Ó yí ayé mi padà.</p>
+        <p class="ed">Es hat mein Leben verändert.</p>
+      </div>
+    </div>
+
+    <!-- BEDEUTUNG 2 -->
+    <div class="sdiv">
+      <div class="shr">
+        <div class="sn"><span>2</span></div>
+        <div><p class="sl2">ayé</p><p class="seq">Welt; menschliche Welt</p></div>
+      </div>
+      <div class="ex exi">
+        <p class="ey">Akàn jẹ́ oúnjẹ àyànfẹ́ fún ogunlọ́gọ̀ ọmọ ènìyàn kárí ayé.</p>
+        <p class="ed">Krabben sind für viele Menschen auf der ganzen Welt eine beliebte Speise.</p>
+      </div>
+      <p class="wlbl">Wendungen</p>
+      <div class="wend-s">
+        <div class="wi">
+          <span class="wi-yo">kárí ayé</span>
+          <span class="wi-sep">—</span>
+          <span class="wi-de">weltweit, auf der ganzen Welt</span>
+        </div>
+        <div class="wi">
+          <span class="wi-yo">gbogbo ayé</span>
+          <span class="wi-sep">—</span>
+          <span class="wi-de">die ganze Welt</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- BEDEUTUNG 3 -->
+    <div>
+      <div class="shr">
+        <div class="sn"><span>3</span></div>
+        <div><p class="sl2">ayé</p><p class="seq">irdisches Leben; diesseitige Welt</p></div>
+      </div>
+      <div class="ex exi">
+        <p class="ey">Ayé lọ́jà, ọ̀run nílé.</p>
+        <p class="ed">Die Welt ist ein Markt; die jenseitige Welt ist das Zuhause.</p>
+      </div>
+
+      <!-- Kultureller Hinweis -->
+      <div class="kult">
+        <div class="kult-top">
+          <i class="ti ti-world" aria-hidden="true"></i>
+          <p class="kult-lbl">Kultureller Hinweis</p>
+        </div>
+        <p class="kult-txt">In traditionellen religiös-philosophischen Kontexten steht <em style="font-style:italic;font-family:'Noto Serif',serif">ayé</em> häufig im Gegensatz zu <em style="font-style:italic;font-family:'Noto Serif',serif">ọ̀run</em>. In solchen Fällen bezeichnet <em style="font-style:italic;font-family:'Noto Serif',serif">ayé</em> nicht nur die physische Welt, sondern das irdische menschliche Dasein.</p>
+      </div>
+
+      <!-- Wendungen -->
+      <div class="subk">
+        <p class="subk-lb">Wendungen</p>
+        <div class="sk">
+          <p class="sk-l">mú ayé dẹrùn</p>
+          <p class="sk-e">das Leben erleichtern</p>
+          <div class="ex">
+            <p class="ey">Ìjọba fẹ́ mú ayé dẹrùn fún àwọn òṣìṣẹ́.</p>
+            <p class="ed">Die Regierung will den Arbeitern das Leben erleichtern.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Siehe auch -->
+      <div class="sa">
+        <p class="sa-lbl">Siehe auch</p>
+        <div class="sa-items">
+          <div class="sa-it">
+            <span class="sa-yo">àgbáyé</span>
+            <span class="sa-de">global, weltweit, Welt-</span>
+          </div>
+          <div class="sa-it">
+            <span class="sa-yo">ilẹ̀-ayé</span>
+            <span class="sa-de">Erde</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="afoot">
+    <span class="afoot-l">Yoruba–Deutsch Wörterbuch · Prototyp</span>
+    <span class="afoot-r">yo → de</span>
+  </div>
+</div>
+
+<!-- ARTIKEL: akọ́nimọ̀ọ́gbá =============================== -->
+<div class="art" id="art-ako">
+  <div class="ahd">
+    <p class="lem" style="font-size:26px">akọ́nimọ̀ọ́gbá</p>
+    <div class="meta">
+      <span class="pos">Substantiv</span>
+      <span class="bdg">Sport</span>
+      <span class="bdg">yo → de</span>
+    </div>
+  </div>
+  <div class="ab">
+
+    <!-- Grundbedeutung -->
+    <p class="gl">Trainer, Trainerin, Coach</p>
+
+    <!-- WORTBILDUNG (aufklappbar) -->
+    <details>
+      <summary>Wortbildung <i class="ti ti-chevron-down ci" aria-hidden="true"></i></summary>
+      <div class="wbd">
+        <p class="wb-str">Struktur: a- + kọ́-ni + mọ̀-ọ́-gbá</p>
+        <div class="wb-li"><span class="wb-p">a-</span><span class="wb-d">agentiv: „Person, die …"</span></div>
+        <div class="wb-li"><span class="wb-p">kọ́ ni</span><span class="wb-d">jemanden unterrichten</span></div>
+        <div class="wb-li"><span class="wb-p">mọ̀ ọ́ gbá</span><span class="wb-d">wissen, wie man es spielt / kickt</span></div>
+        <div class="wb-li"><span class="wb-p">gbá</span><span class="wb-d">sportspezifisch: spielen / kicken, wie in <em style="font-style:italic;font-family:'Noto Serif',serif">gbá bọ́ọ̀lù</em></span></div>
+        <div class="hw" style="margin-top:10px;margin-bottom:0">
+          <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+          <p><strong style="font-weight:500">Hinweis</strong> · In diesem Wort ist <em>gbá</em> im sportspezifischen Sinn „spielen/kicken" zu verstehen, nicht in anderen Bedeutungen wie „fegen".</p>
+        </div>
+      </div>
+    </details>
+
+    <!-- BEDEUTUNG 1 -->
+    <div class="shr">
+      <div class="sn"><span>1</span></div>
+      <div><p class="sl2">akọ́nimọ̀ọ́gbá</p><p class="seq">Trainer, Trainerin, Coach</p></div>
+    </div>
+    <div class="ex exi">
+      <p class="ey">Àjọ náà fẹ́ dá àwọn akọ́nimọ̀ọ́gbá wa lẹ́kọ̀ọ́.</p>
+      <p class="ed">Der Verband will unsere Trainer weiterbilden.</p>
+    </div>
+
+    <!-- KONSTRUKTIONEN -->
+    <div class="subk">
+      <p class="subk-lb">Konstruktionen</p>
+
+      <div class="sk">
+        <p class="sk-l">akọ́nimọ̀ọ́gbá àgbà</p>
+        <p class="sk-e">Cheftrainer, Cheftrainerin</p>
+        <div class="ex">
+          <p class="ey">Akọ́nimọ̀ọ́gbá àgbà ikọ̀ Croatia ti kéde àwọn agbábọ́ọ̀lù rẹ̀.</p>
+          <p class="ed">Der Cheftrainer der kroatischen Mannschaft hat seine Spieler bekannt gegeben.</p>
+        </div>
+      </div>
+
+      <div class="sk">
+        <p class="sk-l">akọ́nimọ̀ọ́gbá ikọ̀ …</p>
+        <p class="sk-e">Trainer einer Mannschaft, Coach eines Teams</p>
+        <div class="ex">
+          <p class="ey">Akọ́nimọ̀ọ́gbá ikọ̀ Super Eagles ti pàṣẹ fún àwọn agbábọ́ọ̀lù rẹ̀.</p>
+          <p class="ed">Der Trainer der Super Eagles gab seinen Spielern Anweisungen.</p>
+        </div>
+      </div>
+
+      <div class="sk">
+        <p class="sk-l">yan ẹnìkan gẹ́gẹ́ bí akọ́nimọ̀ọ́gbá</p>
+        <p class="sk-e">jdn. zum Trainer ernennen, jdn. als Trainer verpflichten</p>
+        <div class="ex">
+          <p class="ey">Ikọ̀ náà ti yan Julen Lopetegui gẹ́gẹ́ bí akọ́nimọ̀ọ́gbá tuntun.</p>
+          <p class="ed">Die Mannschaft hat Julen Lopetegui zum neuen Trainer ernannt.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div class="afoot">
+    <span class="afoot-l">Yoruba–Deutsch Wörterbuch · Prototyp</span>
+    <span class="afoot-r">yo → de</span>
+  </div>
+</div>
+
+</div><!-- end .page-wrap -->
+
+<script>
+const DATA=[
+  {art:'se',lem:'ṣe',equiv:'tun, machen, ausführen, durchführen',typ:'Verb'},
+  {art:'se',lem:'ṣe àmúlò',equiv:'anwenden, umsetzen',typ:'Konstruktion'},
+  {art:'se',lem:'ṣe àfihàn',equiv:'zeigen, darstellen, zum Ausdruck bringen',typ:'Konstruktion'},
+  {art:'se',lem:'ṣe ìdásílẹ̀',equiv:'gründen, einrichten, ins Leben rufen',typ:'Konstruktion'},
+  {art:'se',lem:'ṣe kókó',equiv:'wichtig sein, zentral sein, eine wichtige Rolle spielen',typ:'Konstruktion'},
+  {art:'se',lem:'kì í ṣe',equiv:'ist nicht, kein, es handelt sich nicht um',typ:'Sonderhinweis'},
+  {art:'aye',lem:'ayé',equiv:'Leben',typ:'Bedeutung 1'},
+  {art:'aye',lem:'ayé',equiv:'Welt; menschliche Welt',typ:'Bedeutung 2'},
+  {art:'aye',lem:'kárí ayé',equiv:'weltweit, auf der ganzen Welt',typ:'Wendung'},
+  {art:'aye',lem:'gbogbo ayé',equiv:'die ganze Welt',typ:'Wendung'},
+  {art:'aye',lem:'ayé',equiv:'irdisches Leben; diesseitige Welt',typ:'Bedeutung 3'},
+  {art:'aye',lem:'mú ayé dẹrùn',equiv:'das Leben erleichtern',typ:'Wendung'},
+  {art:'aye',lem:'àgbáyé',equiv:'global, weltweit, Welt-',typ:'Siehe auch'},
+  {art:'aye',lem:'ilẹ̀-ayé',equiv:'Erde',typ:'Siehe auch'},
+  {art:'ako',lem:'akọ́nimọ̀ọ́gbá',equiv:'Trainer, Trainerin, Coach',typ:'Substantiv'},
+  {art:'ako',lem:'akọ́nimọ̀ọ́gbá àgbà',equiv:'Cheftrainer, Cheftrainerin',typ:'Konstruktion'},
+  {art:'ako',lem:'akọ́nimọ̀ọ́gbá ikọ̀ …',equiv:'Trainer einer Mannschaft, Coach eines Teams',typ:'Konstruktion'},
+  {art:'ako',lem:'yan ẹnìkan gẹ́gẹ́ bí akọ́nimọ̀ọ́gbá',equiv:'jdn. zum Trainer ernennen, jdn. als Trainer verpflichten',typ:'Konstruktion'}
+];
+const LBL={se:'ṣe',aye:'ayé',ako:'akọ́nimọ̀ọ́gbá'};
+
+function strip(s){return s.normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase()}
+
+function goTab(id,btn){
+  document.querySelectorAll('.art').forEach(a=>a.classList.remove('show'));
+  document.querySelectorAll('.tb').forEach(b=>b.classList.remove('act'));
+  document.getElementById('art-'+id).classList.add('show');
+  if(btn) btn.classList.add('act');
+  else document.querySelectorAll('.tb')[['se','aye','ako'].indexOf(id)].classList.add('act');
+  document.getElementById('res').classList.remove('show');
+  document.getElementById('q').value='';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function doSearch(){
+  const q=document.getElementById('q').value.trim();
+  const res=document.getElementById('res');
+  if(q.length<2){res.classList.remove('show');return}
+  const sq=strip(q);
+  const hits=DATA.filter(d=>strip(d.lem).includes(sq)||strip(d.equiv).includes(sq));
+  res.classList.add('show');
+  document.querySelectorAll('.art').forEach(a=>a.classList.remove('show'));
+  document.getElementById('res-ct').textContent=hits.length?hits.length+' Ergebnis'+(hits.length===1?'':'se'):'';
+  document.getElementById('res-list').innerHTML=hits.length
+    ?hits.map(h=>`<div class="ri" onclick="goTab('${h.art}',null)"><p class="ri-l">${h.lem}</p><p class="ri-e">${h.equiv}</p><p class="ri-tag">${LBL[h.art]} · ${h.typ}</p></div>`).join('')
+    :'<p class="no-res">Keine Einträge gefunden.</p>';
+}
+</script>
+</body>
+</html>
